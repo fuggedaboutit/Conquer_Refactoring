@@ -46,4 +46,7 @@ npm run watch
 npm run lint
 ```
 
+#### Look Up 
+- [Martin Fowler's Refactoring catalog](https://refactoring.com/catalog/)
+
 All Rights Reserved [@Codemanship](https://github.com/jasongorman)
