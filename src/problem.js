@@ -65,9 +65,9 @@ export default function go(rover, instructions) {
         return { ...robot, facing: 'U', status: 'fail' };
       }
 
-      return { rover, position: { ...rover.position, x: rover.position.x + 1 } };
+      return { robot, position: { ...robot.position, x: robot.position.x + 1 } };
     }
 
-    return { ...rover };
+    return { ...robot };
   }, rover);
 }
