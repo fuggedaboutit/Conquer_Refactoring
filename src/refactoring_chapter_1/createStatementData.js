@@ -3,19 +3,22 @@ import { invoices, plays } from './fixtures';
 
 function accumulateVolumeCredit(invoice, plays) {
   // 포인트
-  let volumeCredits = 0;
+  let defaultCredits = 0;
+  let bonusCredits = 0;
 
   for (const perf of invoice.performances) {
     const play = plays[perf.playID];
 
     // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
+    if (perf.audience > 30) {
+      defaultCredits += perf.audience - 30;
+    }
 
     // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if (play.type === 'comedy') volumeCredits += Math.floor(perf.audience / 5);
+    if (play.type === 'comedy') bonusCredits += Math.floor(perf.audience / 5);
   }
 
-  return volumeCredits;
+  return defaultCredits + bonusCredits;
 }
 
 export default function statement(invoice, plays) {
