@@ -1,12 +1,26 @@
 /* eslint-disable no-restricted-syntax */
 import { invoices, plays } from './fixtures';
 
+function accumulateVolumeCredit(invoice, plays) {
+  // 포인트
+  let volumeCredits = 0;
+
+  for (const perf of invoice.performances) {
+    const play = plays[perf.playID];
+
+    // 포인트를 적립한다.
+    volumeCredits += Math.max(perf.audience - 30, 0);
+
+    // 희극 관객 5명마다 추가 포인트를 제공한다.
+    if (play.type === 'comedy') volumeCredits += Math.floor(perf.audience / 5);
+  }
+
+  return volumeCredits;
+}
+
 export default function statement(invoice, plays) {
   // 전체 공연료
   let totalAmount = 0;
-
-  // 포인트
-  let volumeCredits = 0;
 
   let result = `Statement for ${invoice.customer}\n`;
 
@@ -48,18 +62,8 @@ export default function statement(invoice, plays) {
     totalAmount += thisAmount;
   }
 
-  for (const perf of invoice.performances) {
-    const play = plays[perf.playID];
-
-    // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if (play.type === 'comedy') volumeCredits += Math.floor(perf.audience / 5);
-  }
-
   result += `총액: ${format(totalAmount / 100)}\n`;
-  result += `적립 포인트: ${volumeCredits}점\n`;
+  result += `적립 포인트: ${accumulateVolumeCredit(invoice, plays)}점\n`;
 
   return result;
 }
